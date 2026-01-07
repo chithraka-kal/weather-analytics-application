@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from './components/LoginButton';
 import Dashboard from './components/Dashboard';
-import backgroundImage from './assets/weather-bg.jpg'; 
+import myBackground from './assets/weather-bg.jpg'; 
 
 function App() {
   const { isAuthenticated, isLoading } = useAuth0();
