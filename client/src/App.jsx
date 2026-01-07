@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from './components/LoginButton';
 import Dashboard from './components/Dashboard';
-import myBackground from './assets/weather-bg.jpg'; 
+import backgroundImage from './assets/weather-bg.jpg'; 
 
 function App() {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -10,7 +10,7 @@ function App() {
 
   return (
     <div 
-      style={{ backgroundImage: `url(${myBackground})` }} 
+      style={{ backgroundImage: `url("${myBackground}")` }}
       className="min-h-screen p-8 bg-cover bg-center bg-no-repeat bg-fixed relative flex items-center justify-center" 
     >
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"></div>
