@@ -67,6 +67,27 @@ npm run dev
 # The app should be running at http://localhost:5173
 ```
 
+
+
+---
+
+## 📂 Project Structure
+
+```text
+├── client/         # React Frontend (Vite)
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── server/         # Node.js Backend
+│   ├── data/
+│   ├── services/
+│   ├── utils/
+│   └── index.js
+│   └── package.json
+│
+└── README.md
+```
 ---
 
 ## 📐 Architecture & Design Decisions
@@ -85,14 +106,22 @@ The system assumes a "perfect" weather day starts with a score of **100**. Point
 * **P_wind** (Wind Penalty): `|W_current – 3| × 0.2`
 
 _The final result is clamped between 0 and 100._
-### 2. Reasoning Behind Variable Weights
-The weights were chosen to reflect human physiological sensitivity to different weather parameters:
+### 2. Selection of Ideal Baselines
+The "Ideal" values were selected based on standard human physiological comfort zones:
 
-* **Temperature (Weight: 2.0)** * *Reasoning:* Human thermal comfort is most sensitive to ambient temperature. A deviation of just 5°C from the ideal (e.g., 29°C vs 24°C) significantly impacts comfort. Therefore, this has the highest penalty multiplier to degrade the score rapidly as conditions get too hot or cold.
+* **Ideal Temperature (24°C):** * *Target Range:* 22°C – 26°C.
+    * *Justification:* 24°C represents the median of the standard "Thermal Comfort Zone" for a person in light clothing (common in tropical/temperate climates). Deviations from this midpoint trigger the highest penalties.
+* **Ideal Humidity (50%):** * *Target Range:* 40% – 60%.
+    * *Justification:* This is the optimal range for human health. Levels below 40% cause dryness/irritation, while levels above 60% inhibit sweat evaporation, making heat feel more oppressive.
+* **Ideal Wind Speed (3.0 m/s):** * *Target Range:* 1 m/s – 5 m/s.
+    * *Justification:* 3.0 m/s corresponds to a "Light Breeze" on the Beaufort scale. This provides sufficient air circulation for cooling without being disruptive or requiring protective clothing.
 
-* **Humidity (Weight: 0.5)** * *Reasoning:* Humans are generally tolerant of a range of humidity (30% - 70%). While extreme humidity is uncomfortable, small deviations are less noticeable than temperature changes. A lower weight (0.5) ensures that a slightly humid day doesn't ruin the score unless the deviation is massive.
+### 3. Reasoning Behind Variable Weights
+The weights reflect the sensitivity of human comfort to each variable:
 
-* **Wind Speed (Weight: 0.2)** * *Reasoning:* Wind is a minor modifier. Unless it reaches gale force or is dead calm in high heat, its impact on general comfort is secondary. This low weighting ensures wind only affects the score significantly in extreme conditions.
+* **Temperature (Weight: 2.0):** Humans are endotherms; ambient temperature is the primary driver of physical comfort. A 5°C deviation (e.g., 29°C) is immediately noticeable and uncomfortable. This high weight ensures the score degrades rapidly if the temperature is unsafe.
+* **Humidity (Weight: 0.5):** Humidity acts as a modifier. While high humidity makes heat worse, humans are generally tolerant of a wider range (30%-70%). A lower weight ensures humidity adjusts the score but doesn't dominate it unless extreme.
+* **Wind Speed (Weight: 0.2):** Wind is secondary. Unless it is gale-force or dead calm in high heat, it has a minor impact on overall comfort compared to temperature.
 
 
 ### 3. Cache Design Strategy
@@ -166,25 +195,7 @@ This endpoint returns the current status of the internal cache, including hits, 
 }
 ```
 
----
 
-## 📂 Project Structure
-
-```text
-├── client/         # React Frontend (Vite)
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-├── server/         # Node.js Backend
-│   ├── data/
-│   ├── services/
-│   ├── utils/
-│   └── index.js
-│   └── package.json
-│
-└── README.md
-```
 
 ## 🧪 Running Tests - Unit tests for the Comfort Index function (Jest)
 
@@ -192,10 +203,11 @@ To run the test suite:
 
 ```bash
 # Navigate to the relevant folder (client or server)
-cd client
+cd server
 npm test
 ```
 
+---
 ## 👥 Authors
 
 * **Chithraka Kalanamith** - *Developer* 
