@@ -7,6 +7,7 @@ const { calculateComfortIndex } = require('./scoringService');
 
 const weatherCache = new NodeCache({ stdTTL: 300 });
 
+//Extract city codes
 const getCityIds = () => {
     const filePath = path.join(__dirname, '../data/cities.json');
     const rawData = fs.readFileSync(filePath);
@@ -14,6 +15,7 @@ const getCityIds = () => {
     return cities.map(city => city.CityCode);
 };
 
+//fetch weather data for single city
 const fetchWeatherForCity = async (cityId) => {
     const apiKey = process.env.OPENWEATHER_API_KEY;
     const url = `https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apiKey}&units=metric`;
@@ -27,6 +29,9 @@ const fetchWeatherForCity = async (cityId) => {
     }
 };
 
+//main function
+
+    //caching
 const getWeatherData = async () => {
     const cacheKey = "weather_data_sorted";
     
@@ -38,11 +43,13 @@ const getWeatherData = async () => {
 
     console.log("[CACHE] MISS - Fetching new data from API...");
     
+    //raw data fetching
     const cityIds = getCityIds();
     const weatherPromises = cityIds.map(id => fetchWeatherForCity(id));
     const rawWeatherData = await Promise.all(weatherPromises);
     const validData = rawWeatherData.filter(data => data !== null);
 
+    //data processing
     const processedData = validData.map(city => {
         const score = calculateComfortIndex(city);
         return {
@@ -57,6 +64,7 @@ const getWeatherData = async () => {
         };
     });
 
+    //sorting byy the score
     processedData.sort((a, b) => b.comfortIndex - a.comfortIndex);
 
     const finalData = processedData.map((city, index) => ({
@@ -64,11 +72,13 @@ const getWeatherData = async () => {
         rank: index + 1
     }));
 
+    //set the cache for 5 minutes
     weatherCache.set(cacheKey, finalData);
     
     return finalData;
 };
 
+// debug endpoint to show cache status
 const getCacheStats = () => {
     return weatherCache.getStats();
 };

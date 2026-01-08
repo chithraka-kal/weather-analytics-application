@@ -40,6 +40,7 @@ app.get('/api/weather', async (req, res) => {
     }
 });
 
+//Cache debug route
 app.get('/api/weather/debug', (req, res) => {
     const stats = getCacheStats();
     res.json({

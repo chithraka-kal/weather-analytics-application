@@ -4,6 +4,8 @@ import axios from 'axios';
 import LogoutButton from './LogoutButton';
 import { WiCloudy } from 'react-icons/wi';
 
+const baseURL = import.meta.env.BACKEND_URL || 'http://localhost:5000';
+
 const Dashboard = () => {
     const { getAccessTokenSilently } = useAuth0();
     const [weatherData, setWeatherData] = useState([]);
@@ -16,7 +18,7 @@ const Dashboard = () => {
                     authorizationParams: { audience: "https://weather-api.fidenz" }
                 });
 
-                const response = await axios.get('https://weather-analytics-application.onrender.com/api/weather', {
+                const response = await axios.get(`${baseURL}/api/weather`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 

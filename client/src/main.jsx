@@ -13,6 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         redirect_uri: window.location.origin,
         audience: "https://weather-api.fidenz" 
       }}
+      cacheLocation="localstorage"
     >
       <App />
     </Auth0Provider>
