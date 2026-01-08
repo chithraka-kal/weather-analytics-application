@@ -4,7 +4,7 @@ import axios from 'axios';
 import LogoutButton from './LogoutButton';
 import { WiCloudy } from 'react-icons/wi';
 
-const baseURL = import.meta.env.BACKEND_URL || 'http://localhost:5000';
+const baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 const Dashboard = () => {
     const { getAccessTokenSilently } = useAuth0();
